@@ -7,7 +7,7 @@
     <?php print $styles; ?>
     <?php print $scripts; ?>
   </head>
-  <body class="emvideo-modal-iframe">
+  <body class="services-view-resource-page">
     <div class="content">
       <?php print $content; ?>
     </div>
