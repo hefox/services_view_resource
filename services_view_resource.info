@@ -1,5 +1,5 @@
 name = Services View resource
-description = Returns rendered views of content
+description = Returns rendered views of content and users
 package = Services - services
 dependencies[] = services
 core = 6.x
