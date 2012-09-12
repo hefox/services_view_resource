@@ -9,7 +9,7 @@ function services_view_resource_services_resources_alter(&$resources, $endpoint)
     'file' => array(
       'type' => 'inc', 
       'module' => 'services_view_resource',
-      'name' => 'node',
+      'name' => 'resources/node',
     ),
     'help' => t('View node content.'),
     'access callback' => '_node_resource_access',
@@ -32,6 +32,13 @@ function services_view_resource_services_resources_alter(&$resources, $endpoint)
         'source' => array('param' => 'build_mode'),
         'optional' => TRUE,
       ),
+      array(
+        'name' => 'as_page',
+        'type' => 'string',
+        'description' => t('Set false if do not want return wrapped in basic page html.'),
+        'source' => array('param' => 'as_page'),
+        'optional' => TRUE,
+      ),
     ),
   );
   if (module_exists('comment')) {
@@ -39,7 +46,7 @@ function services_view_resource_services_resources_alter(&$resources, $endpoint)
       'file' => array(
         'type' => 'inc', 
         'module' => 'services_view_resource',
-        'name' => 'comment',
+        'name' => 'resources/comment',
       ),
       'help' => t('View comment content.'),
       'access callback' => '_comment_resource_access',
@@ -55,6 +62,13 @@ function services_view_resource_services_resources_alter(&$resources, $endpoint)
           'type' => 'int',
           'description' => 'The cid of the comment to view',
         ),
+        array(
+          'name' => 'as_page',
+          'type' => 'string',
+          'description' => t('Set false if do not want return wrapped in basic page html.'),
+          'source' => array('param' => 'as_page'),
+          'optional' => TRUE,
+        ),
       ),
     );
   }
@@ -62,7 +76,7 @@ function services_view_resource_services_resources_alter(&$resources, $endpoint)
     'file' => array(
       'type' => 'inc', 
       'module' => 'services_view_resource',
-      'name' => 'user',
+      'name' => 'resources/user',
     ),
     'help' => t('View user profile.'),
     'callback' => 'services_view_resource_user_view',
@@ -77,6 +91,13 @@ function services_view_resource_services_resources_alter(&$resources, $endpoint)
         'description' => 'The uid of the user to retrieve.',
         'source' => array('path' => '0'),
         'optional' => FALSE,
+      ),
+      array(
+        'name' => 'as_page',
+        'type' => 'string',
+        'description' => t('Set false if do not want return wrapped in basic page html.'),
+        'source' => array('param' => 'as_page'),
+        'optional' => TRUE,
       ),
     ),
   );
@@ -97,4 +118,59 @@ function services_view_resource_content_build_modes() {
       ),
     ), 
   );
+}
+
+/**
+ * Implementation of hook_theme().
+ */
+function services_view_resource_theme() {
+  $themes = array(
+    'services_view_resource_page' => array(
+      'arguments' => array('content' => ''),
+      'template' => 'services_view_resource_page',
+    ),
+  );
+  return $themes;
+}
+
+/**
+ *  Display the view in a simplified template
+ */
+function template_preprocess_services_view_resource_page(&$variables) {
+  // Tell admin, admin_menu, etc. to supress their output.
+  module_invoke_all('suppress');
+
+  $variables['language']          = $GLOBALS['language'];
+  $variables['language']->dir     = $GLOBALS['language']->direction ? 'rtl' : 'ltr';
+  // Construct page title
+  if (drupal_get_title()) {
+    $variables['head_title'] = array(strip_tags(drupal_get_title()), variable_get('site_name', 'Drupal'));
+  }
+  else {
+    $variables['head_title'] = array(variable_get('site_name', 'Drupal'));
+    if (variable_get('site_slogan', '')) {
+      $variables['head_title'][] = variable_get('site_slogan', '');
+    }
+  }
+  $variables['head_title'] = implode(' | ', $variables['head_title']);
+  $variables['head'] = drupal_get_html_head();
+  $variables['css'] = drupal_add_css();
+  $variables['styles'] = drupal_get_css();
+  $variables['scripts'] = drupal_get_js();
+  $variables['closure'] = theme('closure');
+}
+
+/**
+ * Prepares the return result, rendering as page if requested.
+ *
+ * @param $content
+ *   the rendered content.
+ * @param $as_page
+ *   Render the result as a page.
+ */
+function services_view_resource_prepare_result($content, $as_page = TRUE) {
+  if ($as_page) {
+    return theme('services_view_resource_page', $content);
+  }
+  return $content;
 }
