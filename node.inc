@@ -10,12 +10,10 @@
  *
  * @see node_load()
  */
-function services_view_resource_node_view($nid) {
-  echo $nid;
-  die();
+function services_view_resource_node_view($nid, $build_mode = 'services_view_resource') {
   if ($node = node_load($nid)) {
-    echo node_view($node);
-    die();
+    $node->build_mode = $build_mode;
+    return node_view($node, FALSE, FALSE, FALSE);
   }
   return services_error('Node nid '. $nid .' not found', 404);
 }

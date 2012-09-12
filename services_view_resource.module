@@ -15,6 +15,7 @@ function services_view_resource_services_resources_alter(&$resources, $endpoint)
     'access callback' => '_node_resource_access',
     'access arguments' => array('view'),
     'access callback file' => array('type' => 'inc', 'module' => 'services', 'name' => 'resources/node_resource'),
+    'access arguments append' => TRUE,
     'callback' => 'services_view_resource_node_view',
     'args' => array(
       array(
@@ -24,6 +25,30 @@ function services_view_resource_services_resources_alter(&$resources, $endpoint)
         'type' => 'int',
         'description' => 'The nid of the node to view',
       ),
+      array(
+        'name' => 'build_mode',
+        'type' => 'string',
+        'description' => t('Build mode of node. Defaults to services_view_resource.'),
+        'source' => array('param' => 'build_mode'),
+        'optional' => TRUE,
+      ),
     ),
+  );
+}
+
+/**
+ * Implementation of hook_content_build_modes().
+ */
+function services_view_resource_content_build_modes() {
+  return array(
+    'services_view_resource' => array(
+      'title' => t('Services node view resource'), 
+      'build modes' => array(
+        'services_view_resource' => array(
+          'title' => t('Services node view resource'), 
+          'views style' => FALSE,
+        ),
+      ),
+    ), 
   );
 }
