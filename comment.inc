@@ -1,14 +1,14 @@
 <?php
 
 /**
- * Returns the results of a node_view() for the specified node.
+ * Returns the results of a comment_render() for the specified comment.
  *
- * @param $nid
- *   NID of the node we want to return.
+ * @param $cid
+ *   CID of the comment we want to return.
  * @return
- *   The view or the node.
+ *   The view of the comment.
  *
- * @see node_load()
+ * @see comment_render()
  */
 function services_view_resource_comment_view($cid) {
   $comment = _comment_load($cid);

@@ -34,25 +34,49 @@ function services_view_resource_services_resources_alter(&$resources, $endpoint)
       ),
     ),
   );
-  $resources['comment']['relationships']['view'] = array(
+  if (module_exists('comment')) {
+    $resources['comment']['relationships']['view'] = array(
+      'file' => array(
+        'type' => 'inc', 
+        'module' => 'services_view_resource',
+        'name' => 'comment',
+      ),
+      'help' => t('View comment content.'),
+      'access callback' => '_comment_resource_access',
+      'access arguments' => array('view'),
+      'access callback file' => array('type' => 'inc', 'module' => 'services', 'name' => 'resources/comment_resource'),
+      'access arguments append' => TRUE,
+      'callback' => 'services_view_resource_comment_view',
+      'args' => array(
+        array(
+          'name' => 'cid',
+          'optional' => FALSE,
+          'source' => array('path' => 0),
+          'type' => 'int',
+          'description' => 'The cid of the comment to view',
+        ),
+      ),
+    );
+  }
+  $resources['user']['relationships']['view'] = array(
     'file' => array(
       'type' => 'inc', 
       'module' => 'services_view_resource',
-      'name' => 'comment',
+      'name' => 'user',
     ),
-    'help' => t('View comment content.'),
-    'access callback' => '_comment_resource_access',
+    'help' => t('View user profile.'),
+    'callback' => 'services_view_resource_user_view',
+    'access callback file' => array('type' => 'inc', 'module' => 'services', 'name' => 'resources/user_resource'),
+    'access callback' => '_user_resource_access',
     'access arguments' => array('view'),
-    'access callback file' => array('type' => 'inc', 'module' => 'services', 'name' => 'resources/comment_resource'),
     'access arguments append' => TRUE,
-    'callback' => 'services_view_resource_comment_view',
     'args' => array(
       array(
-        'name' => 'cid',
-        'optional' => FALSE,
-        'source' => array('path' => 0),
+        'name' => 'uid',
         'type' => 'int',
-        'description' => 'The cid of the comment to view',
+        'description' => 'The uid of the user to retrieve.',
+        'source' => array('path' => '0'),
+        'optional' => FALSE,
       ),
     ),
   );

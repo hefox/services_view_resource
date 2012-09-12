@@ -5,10 +5,12 @@
  *
  * @param $nid
  *   NID of the node we want to return.
+ * @param $build_mode
+ *   A build mode to view content as @see content_build_modes().
  * @return
- *   The view or the node.
+ *   The view of the node.
  *
- * @see node_load()
+ * @see node_view()
  */
 function services_view_resource_node_view($nid, $build_mode = 'services_view_resource') {
   if ($node = node_load($nid)) {
