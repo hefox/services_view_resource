@@ -1,0 +1,29 @@
+<?php
+
+
+/**
+ * Implementation of hook_services_resources_alter().
+ */
+function services_view_resource_services_resources_alter(&$resources, $endpoint) {
+  $resources['node']['relationships']['view'] = array(
+    'file' => array(
+      'type' => 'inc', 
+      'module' => 'services_view_resource', 
+      'name' => 'node',
+    ),
+    'help' => t('View node content.'),
+    'access callback' => '_node_resource_access',
+    'access arguments' => array('view'),
+    'access callback file' => array('type' => 'inc', 'module' => 'services', 'name' => 'resources/node_resource'),
+    'callback' => 'services_view_resource_node_view',
+    'args' => array(
+      array(
+        'name' => 'nid',
+        'optional' => FALSE,
+        'source' => array('path' => 0),
+        'type' => 'int',
+        'description' => 'The nid of the node to view',
+      ),
+    ),
+  );
+}
