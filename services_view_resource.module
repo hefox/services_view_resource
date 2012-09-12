@@ -8,7 +8,7 @@ function services_view_resource_services_resources_alter(&$resources, $endpoint)
   $resources['node']['relationships']['view'] = array(
     'file' => array(
       'type' => 'inc', 
-      'module' => 'services_view_resource', 
+      'module' => 'services_view_resource',
       'name' => 'node',
     ),
     'help' => t('View node content.'),
@@ -31,6 +31,28 @@ function services_view_resource_services_resources_alter(&$resources, $endpoint)
         'description' => t('Build mode of node. Defaults to services_view_resource.'),
         'source' => array('param' => 'build_mode'),
         'optional' => TRUE,
+      ),
+    ),
+  );
+  $resources['comment']['relationships']['view'] = array(
+    'file' => array(
+      'type' => 'inc', 
+      'module' => 'services_view_resource',
+      'name' => 'comment',
+    ),
+    'help' => t('View comment content.'),
+    'access callback' => '_comment_resource_access',
+    'access arguments' => array('view'),
+    'access callback file' => array('type' => 'inc', 'module' => 'services', 'name' => 'resources/comment_resource'),
+    'access arguments append' => TRUE,
+    'callback' => 'services_view_resource_comment_view',
+    'args' => array(
+      array(
+        'name' => 'cid',
+        'optional' => FALSE,
+        'source' => array('path' => 0),
+        'type' => 'int',
+        'description' => 'The cid of the comment to view',
       ),
     ),
   );

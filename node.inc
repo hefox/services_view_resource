@@ -6,7 +6,7 @@
  * @param $nid
  *   NID of the node we want to return.
  * @return
- *   Node object or FALSE if not found.
+ *   The view or the node.
  *
  * @see node_load()
  */
